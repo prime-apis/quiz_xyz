@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/quiz",
-      "dest": "server.js"
+      "dest": "/server.js"
     }
   ]
 }
