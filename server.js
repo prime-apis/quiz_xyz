@@ -4,27 +4,32 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Enable CORS for all origins
 app.use(cors());
 
-// API endpoint for getting quiz data based on category
 app.get("/quiz", (req, res) => {
-  const category = req.query.category || "general"; // Default to 'general' if no category is provided
-  const quizPath = path.join(__dirname, "quizdata", `${category}.json`);
+  const category = req.query.category;
+  if (!category) return res.status(400).json({ error: "Category required" });
 
-  // Check if the category file exists
-  if (!fs.existsSync(quizPath)) {
-    return res.status(404).json({ message: `Category ${category} not found.` });
+  const filePath = path.join(__dirname, "data", `${category}_quiz.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "Category not found" });
   }
 
-  // Read the quiz data from the file
-  const quizData = JSON.parse(fs.readFileSync(quizPath, "utf-8"));
-  res.json(quizData); // Send quiz data back to the client
+  try {
+    const quizData = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const randomQuiz = quizData[Math.floor(Math.random() * quizData.length)];
+    res.json(randomQuiz);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to read quiz data" });
+  }
 });
 
-// Set the port for the server to listen on
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`API server is running on port ${port}`);
+app.get("/", (req, res) => {
+  res.send("Quiz API is running!");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
