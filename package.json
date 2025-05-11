@@ -1,13 +1,12 @@
 {
   "name": "quiz-api",
   "version": "1.0.0",
-  "description": "Quiz API for fetching quiz data based on categories",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   }
 }
